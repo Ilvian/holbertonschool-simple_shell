@@ -12,6 +12,7 @@ int main(void)
 	char input[MAX_INPUT_SIZE];
 	char *argv[2];
 	int status;
+	size_t len = strlen(input);
 	pid_t child_pid;
 	
 	while (1)
@@ -22,7 +23,6 @@ int main(void)
 			printf("\n");
 			exit(EXIT_SUCCESS);
 		}
-		size_t len = strlen(input);
 		if (input[len - 1] == '\n')
 		{
 			input[len - 1] = '\0';
