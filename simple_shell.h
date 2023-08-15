@@ -1,3 +1,4 @@
+#include "simple_shell.h"
 int main(void)
 {
     char command[MAX_COMMAND_LENGTH];
