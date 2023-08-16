@@ -9,21 +9,21 @@
 int main() {
     char input[MAX_INPUT_LENGTH];
     char *args[MAX_INPUT_LENGTH / 2];
-    FILE *input_stream = stdin;  // Default to standard input
-
+    FILE *input_stream = stdin;
+    int argc;
+    pid_t pid;
     while (1) {
         if (isatty(fileno(input_stream))) {
-            // If in interactive mode, display prompt
             printf("MyShell> ");
         }
 
         if (fgets(input, sizeof(input), input_stream) == NULL) {
-            break; // Exit the loop on EOF (Ctrl+D)
+            break;
         }
         
         input[strcspn(input, "\n")] = '\0';
 
-        int argc = 0;
+        argc = 0;
         char *token = strtok(input, " ");
         while (token != NULL) {
             args[argc++] = token;
@@ -43,7 +43,7 @@ int main() {
             }
         }
 
-        pid_t pid = fork();
+        pid = fork();
         if (pid == -1) {
             perror("fork");
         } else if (pid == 0) {
