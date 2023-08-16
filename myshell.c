@@ -7,20 +7,24 @@
 #define MAX_INPUT_LENGTH 1024
 
 int main() {
+    char input[MAX_INPUT_LENGTH];
+    char *args[MAX_INPUT_LENGTH / 2];
+    FILE *input_stream = stdin;  // Default to standard input
+
     while (1) {
-        char input[MAX_INPUT_LENGTH];
-        char *args[MAX_INPUT_LENGTH / 2];
-	int argc = 0;
-	pid_t pid;
-	char *token;
+        if (isatty(fileno(input_stream))) {
+            // If in interactive mode, display prompt
+            printf("MyShell> ");
+        }
 
-        printf("MyShell> ");
-
-        fgets(input, sizeof(input), stdin);
+        if (fgets(input, sizeof(input), input_stream) == NULL) {
+            break; // Exit the loop on EOF (Ctrl+D)
+        }
+        
         input[strcspn(input, "\n")] = '\0';
 
-	token = strtok(input, " ");
-
+        int argc = 0;
+        char *token = strtok(input, " ");
         while (token != NULL) {
             args[argc++] = token;
             token = strtok(NULL, " ");
@@ -31,17 +35,15 @@ int main() {
             if (strcmp(args[0], "exit") == 0) {
                 exit(0);
             } else if (strcmp(args[0], "echo") == 0 && argc == 2 && strcmp(args[1], "$$") == 0) {
-                printf("%d\n", getpid());
+                printf("Shell Process ID: %d\n", getpid());
+                continue;
+            } else if (strcmp(args[0], "echo") == 0 && argc == 2 && strcmp(args[1], "$PATH") == 0) {
+                printf("PATH: %s\n", getenv("PATH"));
                 continue;
             }
-	    else if(strcmp(args[0], "echo") == 0 && argc == 2 && strcmp(args[1], "$PATH") == 0)
-			    {
-			    printf("%s", getenv("PATH"));
-			    continue;
-			    }
         }
 
-	pid = fork();
+        pid_t pid = fork();
         if (pid == -1) {
             perror("fork");
         } else if (pid == 0) {
