@@ -12,13 +12,15 @@ int main() {
         char *args[MAX_INPUT_LENGTH / 2];
 	int argc = 0;
 	pid_t pid;
+	char *token;
 
         printf("MyShell> ");
 
         fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = '\0';
 
-        char *token = strtok(input, " ");
+	token = strtok(input, " ");
+
         while (token != NULL) {
             args[argc++] = token;
             token = strtok(NULL, " ");
