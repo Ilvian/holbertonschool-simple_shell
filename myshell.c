@@ -14,6 +14,7 @@ int main() {
         pid_t pid;
 
         printf("MyShell> ");
+        fflush(stdout);
 
         fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = '\0';
@@ -35,7 +36,8 @@ int main() {
             }
         }
 
-        if (pid == -1) {
+        pid = fork();
+	if (pid == -1) {
             perror("fork");
         } else if (pid == 0) {
             execvp(args[0], args);
