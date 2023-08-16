@@ -12,6 +12,7 @@ int main() {
     FILE *input_stream = stdin;
     int argc;
     pid_t pid;
+    char *token;
     while (1) {
         if (isatty(fileno(input_stream))) {
             printf("MyShell> ");
@@ -24,7 +25,7 @@ int main() {
         input[strcspn(input, "\n")] = '\0';
 
         argc = 0;
-        char *token = strtok(input, " ");
+        token = strtok(input, " ");
         while (token != NULL) {
             args[argc++] = token;
             token = strtok(NULL, " ");
