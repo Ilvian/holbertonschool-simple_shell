@@ -10,14 +10,15 @@ int main() {
     while (1) {
         char input[MAX_INPUT_LENGTH];
         char *args[MAX_INPUT_LENGTH / 2];
+        int argc = 0;
+        char *token = strtok(input, " ");
+        pid_t pid = fork();
 
         printf("MyShell> ");
 
         fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = '\0';
 
-        int argc = 0;
-        char *token = strtok(input, " ");
         while (token != NULL) {
             args[argc++] = token;
             token = strtok(NULL, " ");
@@ -33,7 +34,6 @@ int main() {
             }
         }
 
-        pid_t pid = fork();
         if (pid == -1) {
             perror("fork");
         } else if (pid == 0) {
