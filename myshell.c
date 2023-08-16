@@ -11,13 +11,14 @@ int main() {
         char input[MAX_INPUT_LENGTH];
         char *args[MAX_INPUT_LENGTH / 2];
         int argc = 0;
-        char *token = strtok(input, " ");
-        pid_t pid = fork();
+        pid_t pid;
 
         printf("MyShell> ");
 
         fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = '\0';
+
+	char *token = strtok(input, " ");
 
         while (token != NULL) {
             args[argc++] = token;
