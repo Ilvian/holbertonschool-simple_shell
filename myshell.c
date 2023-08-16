@@ -11,15 +11,13 @@ int main() {
         char input[MAX_INPUT_LENGTH];
         char *args[MAX_INPUT_LENGTH / 2];
         int argc = 0;
-        pid_t pid;
+        char *token = strtok(input, " ");
+        pid_t pid = fork();
 
         printf("MyShell> ");
-        fflush(stdout);
 
         fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = '\0';
-
-	char *token = strtok(input, " ");
 
         while (token != NULL) {
             args[argc++] = token;
@@ -31,13 +29,12 @@ int main() {
             if (strcmp(args[0], "exit") == 0) {
                 exit(0);
             } else if (strcmp(args[0], "echo") == 0 && argc == 2 && strcmp(args[1], "$$") == 0) {
-                printf("Shell Process ID: %d\n", getpid());
+                printf("%d\n", getpid());
                 continue;
             }
         }
 
-        pid = fork();
-	if (pid == -1) {
+        if (pid == -1) {
             perror("fork");
         } else if (pid == 0) {
             execvp(args[0], args);
