@@ -4,11 +4,11 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #define MAX_INPUT_LENGTH 1024
-int main() {
+int main(int argc, char *argv[]) {
     char input[MAX_INPUT_LENGTH];
     char *args[MAX_INPUT_LENGTH / 2];
     FILE *input_stream = stdin;
-    int argc;
+    int i;
     pid_t pid;
     char *token;
     while (1) {
@@ -19,20 +19,20 @@ int main() {
             break;
         }
         input[strcspn(input, "\n")] = '\0';
-        argc = 0;
+        i = 0;
         token = strtok(input, " ");
         while (token != NULL) {
-            args[argc++] = token;
+            args[i++] = token;
             token = strtok(NULL, " ");
         }
-        args[argc] = NULL;
-        if (argc > 0) {
+        args[i] = NULL;
+        if (i > 0) {
             if (strcmp(args[0], "exit") == 0){
                 exit(0);
-            } else if (strcmp(args[0], "echo") == 0 && argc == 2 && strcmp(args[1], "$$") == 0) {
+            } else if (strcmp(args[0], "echo") == 0 && i == 2 && strcmp(args[1], "$$") == 0) {
                 printf("Shell Process ID: %d\n", getpid());
                 continue;
-            } else if (strcmp(args[0], "echo") == 0 && argc == 2 && strcmp(args[1], "$PATH") == 0) {
+            } else if (strcmp(args[0], "echo") == 0 && i == 2 && strcmp(args[1], "$PATH") == 0) {
                 printf("PATH: %s\n", getenv("PATH"));
                 continue;
             }
@@ -43,7 +43,7 @@ int main() {
         } else if (pid == 0) {
             if(execvp(args[0], args))
             {
-            printf("%s: not found", args[0]);
+            printf("%s: 1: %s: not found\n", argv[0] ,args[0]);
             exit(1);}
         } else {
             wait(NULL);
