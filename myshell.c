@@ -43,7 +43,7 @@ int main() {
         } else if (pid == 0) {
             execvp(args[0], args);
             perror("execvp");
-            exit();
+            exit(0);
         } else {
             wait(NULL);
         }
