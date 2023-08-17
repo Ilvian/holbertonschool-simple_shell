@@ -13,6 +13,7 @@ int main() {
     pid_t pid;
     char *token;
     char *input_copy;
+    int i;
     while (1) {
         if (isatty(fileno(input_stream))) {
             printf("MyShell> ");
@@ -54,8 +55,14 @@ int main() {
             exit(1);
         } else {
             wait(NULL);
-        }
+    		free(input_copy);
+    		i = 0;
+    		while (args[i] != NULL)
+    		{
+        		free(args[i]);
+        		i++;
+   		 }
+        	}
     }
-    free(input_copy);
     return 0;
 }
