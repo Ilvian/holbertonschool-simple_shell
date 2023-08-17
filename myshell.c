@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
         } else if (pid == 0) {
             if(execvp(args[0], args))
             {
-            printf("%s: 1: %s: not found\n", argv[0] ,args[0]);
+			fprintf(stderr,"%s: 1: %s: not fofund\n", argv[0] ,args[0]);
             exit(127);}
         } else {
             wait(NULL);
