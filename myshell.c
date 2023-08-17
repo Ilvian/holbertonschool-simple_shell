@@ -5,7 +5,6 @@
 #include <sys/wait.h>
 #define MAX_INPUT_LENGTH 1024
 #define MAX_ARG_COUNT (MAX_INPUT_LENGTH / 2)
-
 int main() {
     char input[MAX_INPUT_LENGTH];
     char *args[MAX_ARG_COUNT];
@@ -13,7 +12,7 @@ int main() {
     int argc;
     pid_t pid;
     char *token;
-    char *input_copy; 
+    char *input_copy;
     while (1) {
         if (isatty(fileno(input_stream))) {
             printf("MyShell> ");
@@ -22,8 +21,11 @@ int main() {
             break;
         }
         input[strcspn(input, "\n")] = '\0';
-        
         input_copy = strdup(input);
+        if (input_copy == NULL) {
+            perror("strdup");
+            exit(1);
+        }
         argc = 0;
         token = strtok(input_copy, " ");
         while (token != NULL) {
@@ -31,9 +33,7 @@ int main() {
             token = strtok(NULL, " ");
         }
         args[argc] = NULL;
-        
-        free(input_copy);
-        
+
         if (argc > 0) {
             if (strcmp(args[0], "exit") == 0) {
                 exit(0);
@@ -56,6 +56,6 @@ int main() {
             wait(NULL);
         }
     }
+    free(input_copy);
     return 0;
 }
-
