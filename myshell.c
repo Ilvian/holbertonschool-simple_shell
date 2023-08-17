@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
             if(execvp(args[0], args))
             {
             printf("%s: 1: %s: not found\n", argv[0] ,args[0]);
-            exit(1);}
+            exit(127);}
         } else {
             wait(NULL);
         }
