@@ -28,6 +28,10 @@ int main() {
         args[argc] = NULL;
         if (argc > 0) {
             if (strcmp(args[0], "exit") == 0) {
+		    if(argc == 1)
+		    {
+			    exit (0);
+		    }
                 exit(2);
             } else if (strcmp(args[0], "echo") == 0 && argc == 2 && strcmp(args[1], "$$") == 0) {
                 printf("Shell Process ID: %d\n", getpid());
