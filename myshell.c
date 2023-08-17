@@ -4,16 +4,13 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #define MAX_INPUT_LENGTH 1024
-#define MAX_ARG_COUNT (MAX_INPUT_LENGTH / 2)
 int main() {
     char input[MAX_INPUT_LENGTH];
-    char *args[MAX_ARG_COUNT];
+    char *args[MAX_INPUT_LENGTH / 2];
     FILE *input_stream = stdin;
     int argc;
     pid_t pid;
     char *token;
-    char *input_copy;
-    int i;
     while (1) {
         if (isatty(fileno(input_stream))) {
             printf("MyShell> ");
@@ -22,11 +19,6 @@ int main() {
             break;
         }
         input[strcspn(input, "\n")] = '\0';
-        input_copy = strdup(input);
-        if (input_copy == NULL) {
-            perror("strdup");
-            exit(1);
-        }
         argc = 0;
         token = strtok(input, " ");
         while (token != NULL) {
@@ -34,7 +26,6 @@ int main() {
             token = strtok(NULL, " ");
         }
         args[argc] = NULL;
-
         if (argc > 0) {
             if (strcmp(args[0], "exit") == 0) {
                 exit(0);
@@ -55,14 +46,7 @@ int main() {
             exit(1);
         } else {
             wait(NULL);
-    		free(input_copy);
-    		i = 0;
-    		while (args[i] != NULL)
-    		{
-        		free(args[i]);
-        		i++;
-   		 }
-        	}
+        }
     }
     return 0;
 }
