@@ -9,6 +9,7 @@ int main(int argc, char *argv[]) {
     char *args[MAX_INPUT_LENGTH / 2];
     FILE *input_stream = stdin;
     int i;
+    (void) argc;
     pid_t pid;
     char *token;
     while (1) {
