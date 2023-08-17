@@ -43,7 +43,7 @@ int main() {
         } else if (pid == 0) {
             if(execvp(args[0], args))
             {
-            perror("%s: command not found", args[0]);
+            printf("%s: command not found", args[0]);
             exit(1);}
         } else {
             wait(NULL);
