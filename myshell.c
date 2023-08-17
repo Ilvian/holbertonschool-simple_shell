@@ -27,7 +27,7 @@ int main() {
         }
         args[argc] = NULL;
         if (argc > 0) {
-            if (strcmp(args[0], "exit") == 0) {
+            if (strcmp(args[0], "exit") == 0){
                 exit(0);
             } else if (strcmp(args[0], "echo") == 0 && argc == 2 && strcmp(args[1], "$$") == 0) {
                 printf("Shell Process ID: %d\n", getpid());
@@ -41,9 +41,10 @@ int main() {
         if (pid == -1) {
             perror("fork");
         } else if (pid == 0) {
-            execvp(args[0], args);
-            perror("execvp");
-            exit(1);
+            if(execvp(args[0], args))
+            {
+            perror("%s: command not found", args[0]);
+            exit(1);}
         } else {
             wait(NULL);
         }
