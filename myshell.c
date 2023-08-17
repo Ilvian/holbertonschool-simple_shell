@@ -3,35 +3,37 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
-
 #define MAX_INPUT_LENGTH 1024
+#define MAX_ARG_COUNT (MAX_INPUT_LENGTH / 2)
 
 int main() {
     char input[MAX_INPUT_LENGTH];
-    char *args[MAX_INPUT_LENGTH / 2];
+    char *args[MAX_ARG_COUNT];
     FILE *input_stream = stdin;
     int argc;
     pid_t pid;
     char *token;
+    char *input_copy; 
     while (1) {
         if (isatty(fileno(input_stream))) {
             printf("MyShell> ");
         }
-
         if (fgets(input, sizeof(input), input_stream) == NULL) {
             break;
         }
-        
         input[strcspn(input, "\n")] = '\0';
-
+        
+        input_copy = strdup(input);
         argc = 0;
-        token = strtok(input, " ");
+        token = strtok(input_copy, " ");
         while (token != NULL) {
             args[argc++] = token;
             token = strtok(NULL, " ");
         }
         args[argc] = NULL;
-
+        
+        free(input_copy);
+        
         if (argc > 0) {
             if (strcmp(args[0], "exit") == 0) {
                 exit(0);
@@ -43,7 +45,6 @@ int main() {
                 continue;
             }
         }
-
         pid = fork();
         if (pid == -1) {
             perror("fork");
@@ -55,6 +56,6 @@ int main() {
             wait(NULL);
         }
     }
-
     return 0;
 }
+
