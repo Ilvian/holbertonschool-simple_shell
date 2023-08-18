@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #define MAX_INPUT_LENGTH 1024
 
@@ -35,10 +36,15 @@ int main(int argc, char *argv[]) {
         }
         args[i] = NULL;
 
-        if (i > 0) {
-            if (strcmp(args[0], "exit") == 0) {
-                exit(last_exit_status); 
-            } else if (strcmp(args[0], "echo") == 0 && i == 2 && strcmp(args[1], "$$") == 0) {
+	if (i > 0) {
+	    if (strcmp(args[0], "exit") == 0) {
+        if (last_exit_status == 0 && errno == ENOENT) {
+	            exit(2); 
+ 	       }
+ 	       exit(last_exit_status); 
+ 	   }
+	}
+             else if (strcmp(args[0], "echo") == 0 && i == 2 && strcmp(args[1], "$$") == 0) {
                 printf("Shell Process ID: %d\n", getpid());
                 continue;
             } else if (strcmp(args[0], "echo") == 0 && i == 2 && strcmp(args[1], "$PATH") == 0) {
@@ -56,9 +62,9 @@ int main(int argc, char *argv[]) {
                 exit(127);
             }
         } else {
-            wait(&last_exit_status);
+            wait(&last_exit_status); 
         }
-    }
+    
 
     return 0;
 }
