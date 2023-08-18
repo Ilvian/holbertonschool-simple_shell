@@ -46,8 +46,16 @@ int main(int argc, char *argv[]) {
             {
 			fprintf(stderr,"%s: 1: %s: not found\n", argv[0] ,args[0]);
             exit(127);}
-        } else {
-            wait(NULL);
+    }
+	else {
+            int child_status;
+            waitpid(pid, &child_status, 0);
+            if (WIFEXITED(child_status)) {
+                int exit_status = WEXITSTATUS(child_status);
+                if (exit_status == 127) {
+                    fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
+                }
+            }
         }
     }
     return 0;
