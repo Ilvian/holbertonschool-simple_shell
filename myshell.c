@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
                 exit(127);
             }
         } else {
-            wait(&last_exit_status); // Capture the exit status
+            wait(&last_exit_status);
         }
     }
 
