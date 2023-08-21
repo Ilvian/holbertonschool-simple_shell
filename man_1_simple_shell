@@ -1,0 +1,81 @@
+.TH SIMPLE-SHELL "August 2023" "Simple Shell Manual"
+
+.SH NAME
+simple_shell \- A minimalistic Unix shell implementation
+
+.SH SYNOPSIS
+.B simple_shell
+
+.SH DESCRIPTION
+The \fBsimple_shell\fP program is a basic Unix shell that provides a user
+interface to interact with the operating system. It reads and executes user
+commands, supports basic built-in commands, and manages processes. This manual
+provides a comprehensive guide on how to use and navigate the \fBsimple_shell\fP.
+
+.SH COMMANDS
+The \fBsimple_shell\fP supports the following types of commands:
+
+.IP "Executable Commands".
+The shell is able to execute external executable commands available in the system. Users can provide the command name and any required arguments.
+
+.sp
+.nf
+- \fBls\fP: List the contents of a directory.
+- \fBcp\fP: Copy files or directories.
+- \fBmv\fP: Move or rename files and directories.
+- \fBrm\fP: Remove files or directories.
+- \fBmkdir\fP: Create a new directory.
+- \fBrmdir\fP: Remove an empty directory.
+- \fBtouch\fP: Create an empty file or update file timestamps.
+.fi
+
+For example:
+.sp
+.nf
+$ ls //Single command
+$ gcc myfile.c -o myprogram //Command with arguments
+.fi
+
+.IP "Built-in Commands"
+The shell includes a few built-in commands that are executed directly by the shell:
+.sp
+.nf
+- \fBcd [directory]\fP: Change the current working directory.
+- \fBpwd\fP: Print the current working directory.
+- \fBecho [text]\fP: Display text on the screen.
+- \fBexit\fP: Terminate the shell.
+.fi
+
+.SH COMMAND EXECUTION
+The process of executing commands in the \fBsimple_shell\fP involves several steps:
+
+.IP "User Input Parsing"
+- The shell reads user input and tokenizes it using spaces as separators.
+- The first token is considered the command, and the rest are treated as arguments.
+
+.IP "Locating the Executable"
+- The shell checks each directory listed in the \fBPATH\fP environment variable for
+  an executable file with the same name as the command.
+- If the executable is found, its full path is determined.
+
+.IP "Creating a Child Process"
+- The shell creates a child process using the \fBfork()\fP system call.
+- The child process will be used to execute the desired command.
+
+.IP "Replacing the Child Process"
+- In the child process, the \fBexecvp()\fP function is used to replace the current
+  process image with the image of the desired executable.
+- The \fBexecvp()\fP function takes the command name and arguments as parameters
+  and searches for the executable in the directories listed in the \fBPATH\fP variable.
+
+.IP "Execution of the Command"
+- If the \fBexecvp()\fP call is successful, the executable program is loaded into the
+  child process's memory, overwriting the shell's code.
+- The executable's \fBmain()\fP function starts executing, and the program performs
+  its intended tasks.
+
+.IP "Process Termination"
+- After the executable program completes its tasks, it either terminates naturally
+  or returns an exit code.
+- The child process, having completed its task, terminates as well.
+
