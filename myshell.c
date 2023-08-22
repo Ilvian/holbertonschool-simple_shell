@@ -1,20 +1,27 @@
-#include <ctype.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
 #include <sys/wait.h>
+#include <ctype.h>
 
-#define PROMPT "#cisfun$ "
 #define MAX_INPUT_LENGTH 1024
+#define PROMPT "#cisfun$ "
 
 char *trim_whitespace(char *str) {
     char *end;
+
     while(isspace((unsigned char)*str)) str++;
-    if(*str == 0) return str;
+
+    if(*str == 0)
+        return str;
+
     end = str + strlen(str) - 1;
     while(end > str && isspace((unsigned char)*end)) end--;
+
     end[1] = '\0';
+
     return str;
 }
 
@@ -24,7 +31,7 @@ int main(void) {
     char *token;
     char *args[MAX_INPUT_LENGTH / 2];
     int i, status;
-    pid_t pid, wpid;
+    pid_t pid;
 
     while (1) {
         if (isatty(STDIN_FILENO)) {
