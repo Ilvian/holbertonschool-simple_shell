@@ -1,31 +1,26 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#include <ctype.h>
 
 #define PROMPT "#cisfun$ "
 #define MAX_INPUT_LENGTH 1024
 
 char *trim_whitespace(char *str) {
     char *end;
-
     while(isspace((unsigned char)*str)) str++;
-
-    if(*str == 0) 
-        return str;
-
+    if(*str == 0) return str;
     end = str + strlen(str) - 1;
     while(end > str && isspace((unsigned char)*end)) end--;
-
     end[1] = '\0';
-
     return str;
 }
 
 int main(void) {
     char input[MAX_INPUT_LENGTH];
+    char *trimmed_input;
     pid_t pid;
 
     while (1) {
@@ -39,8 +34,8 @@ int main(void) {
         }
 
         input[strcspn(input, "\n")] = '\0';
+        trimmed_input = trim_whitespace(input);
 
-        char *trimmed_input = trim_whitespace(input);
         if (strlen(trimmed_input) == 0) {
             continue;
         }
