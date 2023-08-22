@@ -53,12 +53,11 @@ perror()
 strcmp()
 strtok()
 # Basic loop of a shell
-## Read:
-Read the command from standard input.
-## Parse:
-Separate the command string into a program and arguments.
-## Execute: 
-Run the parsed command.
+
+Read: Read the command from standard input.
+Parse: Separate the command string into a program and arguments.
+Execute: Run the parsed command.
+
 ## Compilation
 gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o myshell
 
@@ -89,29 +88,15 @@ echo 'hello'
 $ ./hsh test
 'hello'
 $
-Environment
+## Environment
 Upon invocation, hsh receives and copies the environment of the parent process in which it was executed. This environment is an array of name-value strings describing variables in the format NAME=VALUE. A few key environmental variables are:
 
 HOME
-The home directory of the current user and the default directory argument for the cd builtin command.
-
-$ echo "echo $HOME" | ./hsh
-/home/projects
 PWD
-The current working directory as set by the cd command.
-
-$ echo "echo $PWD" | ./hsh
-/home/projects/alx/simple_shell
 OLDPWD
-The previous working directory as set by the cd command.
-
-$ echo "echo $OLDPWD" | ./hsh
-/home/projects/alx/printf
 PATH
-A colon-separated list of directories in which the shell looks for commands. A null directory name in the path (represented by any of two adjacent colons, an initial colon, or a trailing colon) indicates the current directory.
 
-$ echo "echo $PATH" | ./hsh
-/home/projects/.cargo/bin:/home/projects/.local/bin:/home/projects/.rbenv/plugins/ruby-build/bin:/home/projects/.rbenv/shims:/home/projects/.rbenv/bin:/home/projects/.nvm/versions/node/v10.15.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/projects/.cargo/bin:/home/projects/workflow:/home/projects/.local/bin
+
 ## Command Execution
 After receiving a command, hsh tokenizes it into words using " " as a delimiter. The first word is considered the command and all remaining words are considered arguments to that command. hsh then proceeds with the following actions:
 
@@ -134,7 +119,7 @@ $ ./hsh
 $ ^C
 $ ^C
 $
-Variable Replacement
+## Variable Replacement
 hsh interprets the $ character for variable replacement.
 
 $ENV_VARIABLE
@@ -163,6 +148,8 @@ $ echo "echo $PATH" | ./hsh
 /home/projects/.cargo/bin:/home/projects/.local/bin:/home/projects/.rbenv/plugins/ruby-build/bin:/home/projects/.rbenv/shims:/home/projects/.rbenv/bin:/home/projects/.nvm/versions/node/v10.15.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/projects/.cargo/bin:/home/projects/workflow:/home/projects/.local/bin
 ```
 
+
+
 ### Command Execution
 
 After receiving a command, **hsh** tokenizes it into words using `" "` as a delimiter. The first word is considered the command and all remaining words are considered arguments to that command. **hsh** then proceeds with the following actions:
@@ -173,8 +160,6 @@ After receiving a command, **hsh** tokenizes it into words using `" "` as a deli
 ### Exit Status
 
 **hsh** returns the exit status of the last command executed, with zero indicating success and non-zero indicating failure.
-
-If a command is not found, the return status is `127`; if a command is found but is not executable, the return status is 126.
 
 All builtins return zero on success and one or two on incorrect usage (indicated by a corresponding error message).
 
@@ -232,7 +217,7 @@ $ echo "echo 'hello' #this will be ignored!" | ./hsh
 ```
 
 ### Operators
-
+hsh specially interprets the ;, &&, and || characters for command separation, AND logical operator, and OR logical operator respectively.
 **hsh** specially interprets the following operator characters:
 
 #### ; - Command separator
@@ -269,8 +254,9 @@ $ echo "error! || echo 'but still runs'" | ./hsh
 
 The operators `&&` and `||` have equal precedence, followed by `;`.
 
-### hsh Builtin Commands
 
+### Builtin Commands
+hsh supports several builtin commands including cd, alias, exit, env, setenv, unsetenv.
 #### cd
   * Usage: `cd [DIRECTORY]`
   * Changes the current directory of the process to `DIRECTORY`.
