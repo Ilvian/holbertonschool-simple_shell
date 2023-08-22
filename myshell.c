@@ -21,6 +21,9 @@ char *trim_whitespace(char *str) {
 int main(void) {
     char input[MAX_INPUT_LENGTH];
     char *trimmed_input;
+    char *token;
+    char *args[MAX_INPUT_LENGTH / 2];
+    int i;
     pid_t pid;
 
     while (1) {
@@ -40,13 +43,18 @@ int main(void) {
             continue;
         }
 
+        i = 0;
+        token = strtok(trimmed_input, " ");
+        while(token != NULL) {
+            args[i] = token;
+            token = strtok(NULL, " ");
+            i++;
+        }
+        args[i] = NULL;
+
         pid = fork();
         if (pid == 0) {
-            char *args[2];
-            args[0] = trimmed_input;
-            args[1] = NULL;
-            
-            if (execve(trimmed_input, args, NULL) == -1) {
+            if (execvp(args[0], args) == -1) {
                 printf("./shell: No such file or directory\n");
                 exit(1);
             }
