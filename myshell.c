@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
             token = strtok(NULL, " ");
         }
         args[i] = NULL;
-        if (args[0] == NULL) {
+        if (args == NULL) {
             continue;
         }
         if (i > 0) {
@@ -53,16 +53,9 @@ int main(int argc, char *argv[]) {
             printf("%s: 1: %s: not found\n", argv[0] ,args[0]);
             exit(127);}
         } else {
-		int status;
-		wait(&status);
-		free(input_copy);
-		if (WIFEXITED(status)){
-			int exit_status = WEXITSTATUS(status);
-			if (exit_status != 0) {
-            exit(exit_status);		
-		}
+            wait(NULL);
+            free(input_copy);
+        }
     }
     return 0;
-	}
-    }
 }
