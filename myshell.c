@@ -23,8 +23,8 @@ int main(void) {
     char *trimmed_input;
     char *token;
     char *args[MAX_INPUT_LENGTH / 2];
-    int i, status;
-    pid_t pid;
+    int i;
+    pid_t pid, wpid;
 
     while (1) {
         if (isatty(STDIN_FILENO)) {
@@ -59,7 +59,13 @@ int main(void) {
                 exit(127);
             }
         } else {
-            wait(&status);
+            while ((wpid = wait(&i)) > 0);
+            if (WIFEXITED(i)) {
+                int exit_status = WEXITSTATUS(i);
+                if (exit_status == 127) {
+                    exit(127);
+                }
+            }
         }
     }
 
