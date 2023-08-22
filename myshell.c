@@ -52,6 +52,9 @@ int main(void) {
         }
         args[i] = NULL;
 
+	char *new_path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+	setenv("PATH", new_path, 1);
+
         pid = fork();
         if (pid == 0) {
             if (execvp(args[0], args) == -1) {
