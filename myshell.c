@@ -1,74 +1,79 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <ctype.h>
 
+#define MAX_INPUT_LENGTH 1024
+#define PROMPT "#cisfun$ "
+
 char *trim_whitespace(char *str) {
     char *end;
 
-    while (isspace((unsigned char)*str)) str++;
+    while(isspace((unsigned char)*str)) str++;
 
-    if (*str == 0)
+    if(*str == 0)
         return str;
 
     end = str + strlen(str) - 1;
-    while (end > str && isspace((unsigned char)*end)) end--;
+    while(end > str && isspace((unsigned char)*end)) end--;
 
     end[1] = '\0';
 
     return str;
 }
 
-void execute_command(char *command) {
-    pid_t pid;
-    int status;
-    char *args[3];
-
-    command = trim_whitespace(command);
-    args[0] = "/bin/";
-    args[1] = command;
-    args[2] = NULL;
-
-    pid = fork();
-
-    if (pid == 0) {
-        if (execv(args[0], args) == -1) {
-            perror("./hsh");
-            exit(EXIT_FAILURE);
-        }
-    } else if (pid < 0) {
-        perror("./hsh");
-    } else {
-        while (!WIFEXITED(status) && !WIFSIGNALED(status)) {
-            waitpid(pid, &status, WUNTRACED);
-        }
-
-        if (WIFEXITED(status) && WEXITSTATUS(status) == EXIT_FAILURE) {
-            fprintf(stderr, "./hsh: 1: %s: not found\n", command);
-            exit(127);
-        }
-    }
-}
-
 int main(void) {
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t nread;
+    char input[MAX_INPUT_LENGTH];
+    char *trimmed_input;
+    char *token;
+    char *args[MAX_INPUT_LENGTH / 2];
+    int i, status;
+    pid_t pid;
 
     while (1) {
-        printf("#cisfun$ ");
-        nread = getline(&line, &len, stdin);
-
-        if (nread == -1) {
-            free(line);
-            break;
+        if (isatty(STDIN_FILENO)) {
+            printf(PROMPT);
+            fflush(stdout);
         }
 
-        line[nread - 1] = '\0';
-        execute_command(line);
+        if (fgets(input, sizeof(input), stdin) == NULL) {
+            exit(0);
+        }
+
+        input[strcspn(input, "\n")] = '\0';
+        trimmed_input = trim_whitespace(input);
+
+        if (strlen(trimmed_input) == 0) {
+            continue;
+        }
+
+        i = 0;
+        token = strtok(trimmed_input, " ");
+        while(token != NULL) {
+            args[i] = token;
+            token = strtok(NULL, " ");
+            i++;
+        }
+        args[i] = NULL;
+
+        pid = fork();
+        if (pid == 0) {
+            if (execv(args[0], args) == -1) {
+                fprintf(stderr, "./hsh: 1: %s: not found\n", args[0]);
+                exit(127);
+            }
+        } else {
+            waitpid(pid, &status, 0);
+            if (WIFEXITED(status)) {
+                int exit_status = WEXITSTATUS(status);
+                if (exit_status == 127) {
+                    exit(127);
+                }
+            }
+        }
     }
 
     return 0;
