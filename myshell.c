@@ -64,7 +64,10 @@ int main(void) {
     ssize_t read;
 
     while (1) {
-        printf("#cisfun$ ");
+        if (isatty(STDIN_FILENO)) {
+            printf("#cisfun$ ");
+        }
+        
         read = getline(&line, &len, stdin);
         if (read == -1)
             break;
