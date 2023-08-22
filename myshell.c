@@ -52,7 +52,7 @@ int main(void) {
         }
         args[i] = NULL;
 
-	char *new_path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+	char *new_path;
 	setenv("PATH", new_path, 1);
 
         pid = fork();
