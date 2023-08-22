@@ -30,7 +30,9 @@ int main(void) {
         }
 
         if (pid == 0) {  
-            char *args[] = {input, NULL};
+            char *args[2];
+args[0] = input;
+args[1] = NULL;
             if (execve(input, args, NULL) == -1) {
                 printf("./shell: No such file or directory\n");
                 exit(1);
@@ -43,3 +45,4 @@ int main(void) {
 
     return 0;
 }
+
