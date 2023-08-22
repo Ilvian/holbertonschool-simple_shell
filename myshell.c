@@ -27,6 +27,7 @@ char *trim_whitespace(char *str) {
 
 int main(void) {
     char input[MAX_INPUT_LENGTH];
+    char path_command[MAX_INPUT_LENGTH];
     char *trimmed_input;
     char *token;
     char *args[MAX_INPUT_LENGTH / 2];
@@ -58,6 +59,9 @@ int main(void) {
             i++;
         }
         args[i] = NULL;
+
+        snprintf(path_command, sizeof(path_command), "/bin/%s", args[0]);
+        args[0] = path_command;
 
         pid = fork();
         if (pid == 0) {
