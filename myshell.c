@@ -23,7 +23,7 @@ int main(void) {
     char *trimmed_input;
     char *token;
     char *args[MAX_INPUT_LENGTH / 2];
-    int i, status;
+    int i;
     pid_t pid, wpid;
 
     while (1) {
@@ -54,14 +54,14 @@ int main(void) {
 
         pid = fork();
         if (pid == 0) {
-            if (execv(args[0], args) == -1) {
+            if (execvp(args[0], args) == -1) {
                 fprintf(stderr, "./hsh: 1: %s: not found\n", args[0]);
                 exit(127);
             }
         } else {
-            waitpid(pid, &status, 0);
-            if (WIFEXITED(status)) {
-                int exit_status = WEXITSTATUS(status);
+            while ((wpid = wait(&i)) > 0);
+            if (WIFEXITED(i)) {
+                int exit_status = WEXITSTATUS(i);
                 if (exit_status == 127) {
                     exit(127);
                 }
