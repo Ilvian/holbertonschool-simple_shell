@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
             token = strtok(NULL, " ");
         }
         args[i] = NULL;
-        if (args == NULL) {
+        if (args[0] == NULL) {
             continue;
         }
         if (i > 0) {
