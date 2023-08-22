@@ -1,81 +1,251 @@
-.TH SIMPLE-SHELL "August 2023" "Simple Shell Manual"
+SIMPLE-SHELL(1)                    User Commands                   SIMPLE-SHELL(1)
 
-.SH NAME
-simple_shell \- A minimalistic Unix shell implementation
-
+"manpage for Simple_shell. Simple shell project to Holberton School.
+.TH man 1 " August 2023" "Simple Shell"                    "August 2023 " "1.0"                                              "simple_shell man page"
+SH N
+Holberton Simple Shell
+- A simple UNIX command line interpreter.
 .SH SYNOPSIS
+.B ./hsh [options] [command_string | file]
+
+
+DESCRIPTION
+       The simple-shell command is a basic command-line shell that allows users to
+       interact with an operating system by entering commands. It provides a
+       simplified interface for executing commands, managing processes, and
+       navigating the file system.
+
+.SH ARGUMENTS
+The only argument that should be supplied to the shell
+is the name of a file. When this happens,
+the shell reads and	executes commands from this	file, then exits.
+The shell's exit status is the exit status of the last command
+executed in the script. If no commands are executed, the exit
+status is 0. An attempt is made to open the file in
+the current directory.
+." and, if no file is found,	then the shell searches	the
+." directories	in PATH	for the	script.
+
+.Sh COMPILATION
+
+if the simple_shell still does not have an execution file, it is necessary to perform the compilation process from the .c files that host the source code, this process is recommended to do it with the GNU Compiler Collection and you must enter the following line:
+.P
+.RS
+.B $ gcc -Wall -Werror -Wextra -pedantic *.c -o simple_shell
+.P
+.RE
+after the compilation process, your simple_shell should work like this in interactive mode, typing the following line followed by an ENTER::
+.P
+.RS
+.B $ ./simple_shell
+.P
+.RE
+But also in non-interactive mode:
+.P
+.RS
+.B $ echo "/bin/ls" | ./simple_shell
+
+
+COMMANDS
+  The simple-shell supports the following commands:
+.IT
+.B pwd
+- prints the name of the current working directory
+
+.B ls
+- list the contents of the directory
+
+.B echo
+- shows a line of text
+
+.B env
+- display the environment variables and their values
+
+
+ cd [directory]
+              Change the current working directory to the specified directory.
+
+       exit   Terminate the shell.
+
+       [command] [arguments]
+              Execute an external command with its arguments.
+
+       [command] [arguments] &
+              Execute a command in the background.
+
+       [command] [arguments] < input_file > output_file
+              Execute a command with input and output redirection.
+
+       [command1] | [command2]
+              Pipe the output of command1 as input to command2.
+       
+SPECIAL CHARACTERS
+       The simple-shell recognizes the following special characters:
+
+       ;      Command separator to execute multiple commands in sequence.
+
+       &      Run a command in the background.
+
+       <      Redirect input from a file.
+
+       >      Redirect output to a file.
+
+       |      Pipe output from one command as input to another.
+
+USAGE
+       To start the simple-shell, open a terminal and type "simple-shell" followed
+       by the Enter key. The shell prompt "shell>" will appear, indicating that
+       the shell is ready to accept commands.
+
+       Enter commands at the prompt and press Enter to execute them.
+
+       To execute a command in the background, append "&" to the command.
+
+       To change the working directory, use the "cd" command followed by the
+       directory path.
+
+       Redirect input from a file using "<" and redirect output to a file using ">".
+
+       Use "|" to create a pipeline between two commands.
+
+.SH COMMENTS
+In a non-interactive shell or an interactive shell, a word beginning
+with a
+.B #
+causes that word and all remaining characters on that line to be ignored.
+Comments are on by default.
+
+.SH QUOTING
+.I Quoting
+is used to remove the special meaning of certain characters or
+words to the shell, such as operators or whitespace.
+There are two types of quoting: matched single quotes,
+and matched double quotes.
+
+.SS Single Quotes
+Enclosing characters in single quotes preserves the literal meaning of all
+the characters (except single quotes, making it impossible to put
+single-quotes in a single-quoted string).
+
+.SS Double Quotes
+Enclosing characters within double quotes preserves the literal
+meaning of all characters except dollarsign as they're used to signify
+the start of a variable or special parameters like ? and $.
+
+.SH ALIASES
+An alias is a name and corresponding value set using the alias builtin command.
+Whenever a word is read, the shell
+checks the word to see if it matches an alias.
+If it does, it replaces it in the input stream with its value.
+For example, if there is an alias called
+"put"
+with the value
+.Dq "echo -e" ,
+then the input:
+.Pp
+.Dl put "\e[31mCool\e[0m" Aq return
+.Pp
+would become
+.Pp
+.Dl echo -e "\e[31mCool\e[0m" Aq return
+.Pp
+Aliases provide a convenient way for naive users to create shorthands for
+commands.
+They can also be used to create lexically obscure code.
+This use is discouraged.
+
+.SH SIGNALS
+When
 .B simple_shell
+is interactive, it catches and handles
+.B SIGINT
+(so that pressing Control+C does not kill an interactive shell).
 
-.SH DESCRIPTION
-The \fBsimple_shell\fP program is a basic Unix shell that provides a user
-interface to interact with the operating system. It reads and executes user
-commands, supports basic built-in commands, and manages processes. This manual
-provides a comprehensive guide on how to use and navigate the \fBsimple_shell\fP.
+.SH ENVIRONMENT
+.TP
+HOME
+This environment variable functions as the default argument for
+the cd builtin.
+.TP
+PATH
+The default serch path for executables.
+.TP
+PS1
+The primary prompt string, which defaults to "$ ".
+.TP
+PWD
+The logical value of the current working directory. This is set by
+the \fBcd\fP command.
+.TP
+OLDPWD
+The previous logical value of the current working directory. This is set by
+the \fBcd\fP command.
 
-.SH COMMANDS
-The \fBsimple_shell\fP supports the following types of commands:
+.SH FILES
+.PD 0
+.TP
+.I /bin/simple_shell
+The \fBsimple_shell\fP executable
+.TP
+.I $HOME/.simple_shell_history
+The \fBsimple_shell\fP history file
+.PD
 
-.IP "Executable Commands".
-The shell is able to execute external executable commands available in the system. Users can provide the command name and any required arguments.
-
-.sp
-.nf
-- \fBls\fP: List the contents of a directory.
-- \fBcp\fP: Copy files or directories.
-- \fBmv\fP: Move or rename files and directories.
-- \fBrm\fP: Remove files or directories.
-- \fBmkdir\fP: Create a new directory.
-- \fBrmdir\fP: Remove an empty directory.
-- \fBtouch\fP: Create an empty file or update file timestamps.
-.fi
-
+.SS Invocation
+.B hsh
+is invoked by the command:
+.br
+.\&$ ./hsh
+        A prompt will appear for the user to enter and execute commands by typing comma
+        nd names and pressing the return key. A user can also pipe commands into the pr
+        ogram via the pipe character '|'.
 For example:
-.sp
-.nf
-$ ls //Single command
-$ gcc myfile.c -o myprogram //Command with arguments
-.fi
+.br
+\&$ echo "hello world" | ./hsh
 
-.IP "Built-in Commands"
-The shell includes a few built-in commands that are executed directly by the shell:
-.sp
-.nf
-- \fBcd [directory]\fP: Change the current working directory.
-- \fBpwd\fP: Print the current working directory.
-- \fBecho [text]\fP: Display text on the screen.
-- \fBexit\fP: Terminate the shell.
-.fi
+.SH INSTALLATION
+.I To install:
+.br
 
-.SH COMMAND EXECUTION
-The process of executing commands in the \fBsimple_shell\fP involves several steps:
+.B git clone https://github.com/Fraol123/simple_shell.git
+br
 
-.IP "User Input Parsing"
-- The shell reads user input and tokenizes it using spaces as separators.
-- The first token is considered the command, and the rest are treated as arguments.
+.I Compile files using:
+.br
 
-.IP "Locating the Executable"
-- The shell checks each directory listed in the \fBPATH\fP environment variable for
-  an executable file with the same name as the command.
-- If the executable is found, its full path is determined.
+.B gcc -Wall -Werror -Wextra -pedantic *.c -o hsh
+.br
+.br
 
-.IP "Creating a Child Process"
-- The shell creates a child process using the \fBfork()\fP system call.
-- The child process will be used to execute the desired command.
+.SH EXAMPLE
+$ ./hsh
+.br
+$ ls -l
 
-.IP "Replacing the Child Process"
-- In the child process, the \fBexecvp()\fP function is used to replace the current
-  process image with the image of the desired executable.
-- The \fBexecvp()\fP function takes the command name and arguments as parameters
-  and searches for the executable in the directories listed in the \fBPATH\fP variable.
+EXIT STATUS
+       The simple-shell returns an exit status of 0 upon successful termination
+       and a non-zero status if an error occurs.
 
-.IP "Execution of the Command"
-- If the \fBexecvp()\fP call is successful, the executable program is loaded into the
-  child process's memory, overwriting the shell's code.
-- The executable's \fBmain()\fP function starts executing, and the program performs
-  its intended tasks.
+EXAMPLES
+       To list files in the current directory:
+              shell> ls
 
-.IP "Process Termination"
-- After the executable program completes its tasks, it either terminates naturally
-  or returns an exit code.
-- The child process, having completed its task, terminates as well.
+       To run a command in the background:
+              shell> sleep 10 &
 
+       To change the working directory:
+              shell> cd /path/to/directory
+
+       To redirect input and output:
+              shell> cat < input.txt > output.txt
+
+       To use pipes to filter results:
+              shell> ls -l | grep ".txt"
+
+.SH SEE ALSO
+sh(1)
+
+AUTHOR
+       Arlind, Ilvian, Ersida Karaj
+
+       , sh(1)
