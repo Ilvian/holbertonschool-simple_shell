@@ -12,11 +12,12 @@ int main(void) {
     pid_t pid;
 
     while (1) {
-        printf(PROMPT);
-        fflush(stdout); 
-       
+        if (isatty(STDIN_FILENO)) {
+            printf(PROMPT);
+            fflush(stdout); 
+        }
+
         if (fgets(input, sizeof(input), stdin) == NULL) {
-           
             printf("\n");
             exit(0);
         }
@@ -29,20 +30,19 @@ int main(void) {
             continue;
         }
 
-        if (pid == 0) {  
+        if (pid == 0) {
             char *args[2];
-args[0] = input;
-args[1] = NULL;
+            args[0] = input;
+            args[1] = NULL;
+            
             if (execve(input, args, NULL) == -1) {
                 printf("./shell: No such file or directory\n");
                 exit(1);
             }
         } else {
-            
             wait(NULL);
         }
     }
 
     return 0;
 }
-
