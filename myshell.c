@@ -60,7 +60,12 @@ int main(void) {
         }
         args[i] = NULL;
 
-        snprintf(path_command, sizeof(path_command), "/bin/%s", args[0]);
+        if (args[0][0] == '.' || args[0][0] == '/') {
+            snprintf(path_command, sizeof(path_command), "%s", args[0]);
+        } else {
+            snprintf(path_command, sizeof(path_command), "/bin/%s", args[0]);
+        }
+
         args[0] = path_command;
 
         pid = fork();
