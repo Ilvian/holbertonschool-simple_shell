@@ -14,23 +14,17 @@ int main(void) {
     while (1) {
         if (isatty(STDIN_FILENO)) {
             printf(PROMPT);
-            fflush(stdout); 
+            fflush(stdout);
         }
 
         if (fgets(input, sizeof(input), stdin) == NULL) {
-            printf("\n");
             exit(0);
         }
 
         input[strcspn(input, "\n")] = '\0';
-
         pid = fork();
-        if (pid == -1) {
-            perror("fork");
-            continue;
-        }
 
-        if (pid == 0) {
+        if (pid == 0) {  
             char *args[2];
             args[0] = input;
             args[1] = NULL;
@@ -46,3 +40,4 @@ int main(void) {
 
     return 0;
 }
+
