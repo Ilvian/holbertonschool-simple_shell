@@ -1,61 +1,45 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+
+#define PROMPT "#cisfun$ "
 #define MAX_INPUT_LENGTH 1024
-int main(int argc, char *argv[]) {
+
+int main(void) {
     char input[MAX_INPUT_LENGTH];
-    char *args[MAX_INPUT_LENGTH / 2];
-    FILE *input_stream = stdin;
-    int i;
     pid_t pid;
-    char *token;
-    char *input_copy;
-    (void) argc;
+
     while (1) {
-        if (isatty(fileno(input_stream))) {
-            printf("MyShell> ");
+        printf(PROMPT);
+        fflush(stdout); 
+       
+        if (fgets(input, sizeof(input), stdin) == NULL) {
+           
+            printf("\n");
+            exit(0);
         }
-        if (fgets(input, sizeof(input), input_stream) == NULL) {
-            break;
-        }
+
         input[strcspn(input, "\n")] = '\0';
-        input_copy = strdup(input);
-        i = 0;
-        token = strtok(input, " ");
-        while (token != NULL) {
-            args[i++] = token;
-            token = strtok(NULL, " ");
-        }
-        args[i] = NULL;
-        if (args == NULL) {
-            continue;
-        }
-        if (i > 0) {
-            if (strcmp(args[0], "exit") == 0){
-		    free(input_copy);
-                exit(0);
-            } else if (strcmp(args[0], "echo") == 0 && i == 2 && strcmp(args[1], "$$") == 0) {
-                printf("Shell Process ID: %d\n", getpid());
-                continue;
-            } else if (strcmp(args[0], "echo") == 0 && i == 2 && strcmp(args[1], "$PATH") == 0) {
-                printf("PATH: %s\n", getenv("PATH"));
-                continue;
-            }
-        }
+
         pid = fork();
         if (pid == -1) {
             perror("fork");
-        } else if (pid == 0) {
-            if(execvp(args[0], args))
-            {
-            printf("%s: 1: %s: not found\n", argv[0] ,args[0]);
-            exit(127);}
+            continue;
+        }
+
+        if (pid == 0) {  
+            char *args[] = {input, NULL};
+            if (execve(input, args, NULL) == -1) {
+                printf("./shell: No such file or directory\n");
+                exit(1);
+            }
         } else {
+            
             wait(NULL);
-            free(input_copy);
         }
     }
+
     return 0;
 }
