@@ -1,61 +1,73 @@
+#include <ctype.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+
+#define PROMPT "#cisfun$ "
 #define MAX_INPUT_LENGTH 1024
-int main(int argc, char *argv[]) {
+
+char *trim_whitespace(char *str) {
+    char *end;
+    while(isspace((unsigned char)*str)) str++;
+    if(*str == 0) return str;
+    end = str + strlen(str) - 1;
+    while(end > str && isspace((unsigned char)*end)) end--;
+    end[1] = '\0';
+    return str;
+}
+
+int main(void) {
     char input[MAX_INPUT_LENGTH];
-    char *args[MAX_INPUT_LENGTH / 2];
-    FILE *input_stream = stdin;
-    int i;
-    pid_t pid;
+    char *trimmed_input;
     char *token;
-    char *input_copy;
-    (void) argc;
+    char *args[MAX_INPUT_LENGTH / 2];
+    int i;
+    pid_t pid, wpid;
+
     while (1) {
-        if (isatty(fileno(input_stream))) {
-            printf("MyShell> ");
+        if (isatty(STDIN_FILENO)) {
+            printf(PROMPT);
+            fflush(stdout);
         }
-        if (fgets(input, sizeof(input), input_stream) == NULL) {
-            break;
+
+        if (fgets(input, sizeof(input), stdin) == NULL) {
+            exit(0);
         }
+
         input[strcspn(input, "\n")] = '\0';
-        input_copy = strdup(input);
-        i = 0;
-        token = strtok(input, " ");
-        while (token != NULL) {
-            args[i++] = token;
-            token = strtok(NULL, " ");
-        }
-        args[i] = NULL;
-        if (args == NULL) {
+        trimmed_input = trim_whitespace(input);
+
+        if (strlen(trimmed_input) == 0) {
             continue;
         }
-        if (i > 0) {
-            if (strcmp(args[0], "exit") == 0){
-		    free(input_copy);
-                exit(0);
-            } else if (strcmp(args[0], "echo") == 0 && i == 2 && strcmp(args[1], "$$") == 0) {
-                printf("Shell Process ID: %d\n", getpid());
-                continue;
-            } else if (strcmp(args[0], "echo") == 0 && i == 2 && strcmp(args[1], "$PATH") == 0) {
-                printf("PATH: %s\n", getenv("PATH"));
-                continue;
+
+        i = 0;
+        token = strtok(trimmed_input, " ");
+        while(token != NULL) {
+            args[i] = token;
+            token = strtok(NULL, " ");
+            i++;
+        }
+        args[i] = NULL;
+
+        pid = fork();
+        if (pid == 0) {
+            if (execvp(args[0], args) == -1) {
+                fprintf(stderr, "./hsh: 1: %s: not found\n", args[0]);
+                exit(127);
+            }
+        } else {
+            while ((wpid = wait(&i)) > 0);
+            if (WIFEXITED(i)) {
+                int exit_status = WEXITSTATUS(i);
+                if (exit_status == 127) {
+                    exit(127);
+                }
             }
         }
-        pid = fork();
-        if (pid == -1) {
-            perror("fork");
-        } else if (pid == 0) {
-            if(execvp(args[0], args))
-            {
-            printf("%s: 1: %s: not found\n", argv[0] ,args[0]);
-            exit(127);}
-        } else {
-            wait(NULL);
-            free(input_copy);
-        }
     }
+
     return 0;
 }
