@@ -23,7 +23,7 @@ int main(void) {
     char *trimmed_input;
     char *token;
     char *args[MAX_INPUT_LENGTH / 2];
-    int i;
+    int i, status;
     pid_t pid;
 
     while (1) {
@@ -55,11 +55,11 @@ int main(void) {
         pid = fork();
         if (pid == 0) {
             if (execvp(args[0], args) == -1) {
-                printf("./shell: No such file or directory\n");
-                exit(1);
+                fprintf(stderr, "./hsh: 1: %s: not found\n", args[0]);
+                exit(127);
             }
         } else {
-            wait(NULL);
+            wait(&status);
         }
     }
 
