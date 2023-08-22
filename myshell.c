@@ -23,6 +23,7 @@ int main(void) {
     char *trimmed_input;
     char *token;
     char *args[MAX_INPUT_LENGTH / 2];
+     char *new_path;
     int i;
     pid_t pid, wpid;
 
@@ -51,9 +52,6 @@ int main(void) {
             i++;
         }
         args[i] = NULL;
-
-	char *new_path;
-	setenv("PATH", new_path, 1);
 
         pid = fork();
         if (pid == 0) {
