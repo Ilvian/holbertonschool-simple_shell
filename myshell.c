@@ -27,8 +27,7 @@ void execute(pid_t pid, char **args, int *i, pid_t wpid)
 	}
 	else
 	{
-		while
-			((wpid = wait(i)) > 0);
+		while((wpid = wait(i)) > 0);
 		if (WIFEXITED(*i))
 		{
 			int exit_status = WEXITSTATUS(*i);
