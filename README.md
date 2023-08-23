@@ -246,7 +246,7 @@ If the first character of the command is neither a slash (\) nor dot (.), the sh
 If the first character of the command is none of a slash (\), dot (.), nor builtin, hsh searches each element of the PATH environmental variable for a directory containing an executable file by that name.
 If the first character of the command is a slash (\) or dot (.) or either of the above searches was successful, the shell executes the named program with any remaining given arguments in a separate execution environment.
 ## Exit Status
-hsh returns the exit status of the last command executed, with zero indicating success and non-zero indicating failure.
+sh returns the exit status of the last command executed, with zero indicating success and non-zero indicating failure.
 
 If a command is not found, the return status is 127; if a command is found but is not executable, the return status is 126.
 
@@ -262,7 +262,7 @@ Pair programming and team work
 Building a test suite to check our own code
 
 ## Authors
-👤 **ARLIND**
+👤 **ARLIND Hasimi**
 👤 **ILVIAN DIMCO**
 👤 **DONALD MERDANAJ**
 👤 **ERSIDA KARAJ**
