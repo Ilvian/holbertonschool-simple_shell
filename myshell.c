@@ -15,7 +15,7 @@
  * @i: Loop counter
  * @wpid: Process ID of the child process
  */
-void execute(pid_t pid, char **args, int *i, pid_t wpid)
+void execute(pid_t pid, char **args, int *i, pid_t *wpid)
 {
 	if (pid == 0)
 	{
@@ -27,7 +27,7 @@ void execute(pid_t pid, char **args, int *i, pid_t wpid)
 	}
 	else
 	{
-		while((wpid = wait(i)) > 0);
+		while((*wpid = wait(i)) > 0);
 		if (WIFEXITED(*i))
 		{
 			int exit_status = WEXITSTATUS(*i);
@@ -97,7 +97,7 @@ int main(void)
 		if (strcmp(args[0], "exit") == 0)
 			exit(0);
 		pid = fork();
-		execute(pid, args, &i, wpid);
+		execute(pid, args, &i, &wpid);
 	}
 	return (0);
 }
