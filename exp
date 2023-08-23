@@ -1,0 +1,90 @@
+#include <ctype.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+This section includes the necessary header files that provide functions and definitions used in the code.
+
+c
+Copy code
+#define PROMPT "#cisfun$ "
+#define MAX_INPUT_LENGTH 1024
+These are preprocessor macros. PROMPT is set to the string that represents the shell prompt, and MAX_INPUT_LENGTH specifies the maximum length of user input.
+
+c
+Copy code
+void execute(pid_t pid, char **args, int *i, pid_t *wpid)
+{
+	// ...
+}
+The execute function is responsible for executing a given command. It's used to manage the process of executing a command in the shell. It takes a pid (process ID), an array of args (command arguments), a pointer i for loop control, and a pointer wpid for managing child process IDs.
+
+If pid is 0, it's the child process. The function uses execvp to execute the command specified in the args array. If the command is not found, it prints an error message and exits the child process with status 127.
+
+If pid is not 0, it's the parent process. It waits for the child process to finish using the wait function and then checks the exit status of the child process. If the child process exited normally (not due to a signal), it checks the exit status value. If the exit status is non-zero, it exits the parent process with that status.
+
+c
+Copy code
+char *trim_whitespace(char *str)
+{
+	// ...
+}
+The trim_whitespace function is used to remove leading and trailing whitespace from a given string. It loops through the string, advancing the pointer past leading whitespace characters. Then, it scans from the end of the string backward to remove trailing whitespace. The function returns the modified string.
+
+c
+Copy code
+int main(void)
+{
+	char input[MAX_INPUT_LENGTH];
+	char *trimmed_input, *token, *args[MAX_INPUT_LENGTH / 2];
+	int i;
+	pid_t pid, wpid;
+In the main function, variables are declared for various purposes: input to store user input, trimmed_input for the input without leading/trailing whitespace, token for tokenizing the input, args for storing individual command arguments, i for loop control, and pid and wpid for managing process IDs.
+
+c
+Copy code
+	while (1)
+	{
+		if (isatty(STDIN_FILENO))
+		{
+			printf(PROMPT);
+			fflush(stdout);
+		}
+
+		if (fgets(input, sizeof(input), stdin) == NULL)
+			exit(0);
+		input[strcspn(input, "\n")] = '\0';
+		trimmed_input = trim_whitespace(input);
+
+		if (strlen(trimmed_input) == 0)
+			continue;
+		i = 0;
+		token = strtok(trimmed_input, " ");
+		while (token != NULL)
+		{
+			args[i] = token;
+			token = strtok(NULL, " ");
+			i++;
+		}
+		args[i] = NULL;
+
+		if (strcmp(args[0], "exit") == 0)
+			exit(0);
+
+		pid = fork();
+		execute(pid, args, &i, &wpid);
+	}
+	return (0);
+}
+The main function contains the core of the shell logic. It enters an infinite loop, displaying the shell prompt if the input is from a terminal. It then reads user input using fgets, removes the trailing newline character, trims leading and trailing whitespace, and proceeds to process the input.
+
+If the trimmed input length is 0 (i.e., the user entered only whitespace), the loop continues to the next iteration without executing any command.
+
+The input is tokenized using strtok, and each token is stored in the args array. The special command "exit" is checked; if the user entered "exit," the program exits gracefully.
+
+A child process is created using fork, and the execute function is called to execute the specified command.
+
+The loop continues, and the shell waits for user input again.
+
+Overall, this code implements a simple shell that can read and execute user commands, handle whitespace, and exit upon the "exit" command. However, it lacks more advanced features of typical shells like pipes, redirection, and more sophisticated command handling.
