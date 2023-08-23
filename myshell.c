@@ -52,6 +52,8 @@ int main(void) {
         }
         args[i] = NULL;
 
+        printf("DEBUG: PATH = %s\n", getenv("PATH"));
+
         pid = fork();
         if (pid == 0) {
             if (execvp(args[0], args) == -1) {
@@ -71,3 +73,4 @@ int main(void) {
 
     return 0;
 }
+
