@@ -263,7 +263,7 @@ Building a test suite to check our own code
 
 ## Authors
 👤 **ARLIND**
-👤 **ILVI**
-👤 **DONALD**
-👤 **ERSIDA**
+👤 **ILVIAN DIMCO**
+👤 **DONALD MERDANAJ**
+👤 **ERSIDA KARAJ**
 
