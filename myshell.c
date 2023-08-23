@@ -52,6 +52,10 @@ int main(void) {
         }
         args[i] = NULL;
 
+        if (strcmp(args[0], "exit") == 0) {
+            exit(0);
+        }
+
         pid = fork();
         if (pid == 0) {
             if (execvp(args[0], args) == -1) {
@@ -62,8 +66,8 @@ int main(void) {
             while ((wpid = wait(&i)) > 0);
             if (WIFEXITED(i)) {
                 int exit_status = WEXITSTATUS(i);
-                if (exit_status == 127) {
-                    exit(127);
+                if (exit_status != 0) {
+                    exit(exit_status);
                 }
             }
         }
@@ -71,3 +75,4 @@ int main(void) {
 
     return 0;
 }
+
