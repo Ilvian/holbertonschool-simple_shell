@@ -52,7 +52,9 @@ int main(void) {
         }
         args[i] = NULL;
 
-        printf("DEBUG: PATH = %s\n", getenv("PATH"));
+        if (strcmp(args[0], "exit") == 0) {
+            exit(0);
+        }
 
         pid = fork();
         if (pid == 0) {
