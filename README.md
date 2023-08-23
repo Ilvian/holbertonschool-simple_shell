@@ -1,4 +1,4 @@
-# C - Simple Shell
+#  - Simple Shell
 Project to be done in teams of 4 people (your team: Arlind, Ilvian, Donald Meerdanaj, Ersida Karaj)
 # Objectives
 -	Learn **Unix Shell**.
