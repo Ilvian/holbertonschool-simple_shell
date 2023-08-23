@@ -66,8 +66,8 @@ int main(void) {
             while ((wpid = wait(&i)) > 0);
             if (WIFEXITED(i)) {
                 int exit_status = WEXITSTATUS(i);
-                if (exit_status == 127) {
-                    exit(127);
+                if (exit_status != 0) {
+                    exit(exit_status);
                 }
             }
         }
