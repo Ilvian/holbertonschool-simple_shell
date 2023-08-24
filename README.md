@@ -157,14 +157,6 @@ command. For this project, the execvp() function should be invoked as execvp(arg
 check whether the user included & to determine whether or not the parent process is to wait for the child
 to exit.
 
-
-
-
-
-
-
-
-
 ## IV. Redirecting Input and Output
 Your shell should then be modified to support the ‘>’ and ‘<’ redirection operators, where ‘>’ redirects
 the output of a command to a file and ‘<’ redirects the input to a command from a file. For example, if a
