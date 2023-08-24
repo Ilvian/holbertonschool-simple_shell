@@ -128,9 +128,10 @@ int main(void) {
   return 0;
 }
 ```
-The main() function presents the prompt osh-> and outlines the steps to be taken after input from the
+The main() function presents the prompt -> and outlines the steps to be taken after input from the
 user has been read. The main() function continually loops as long as should run equals 1; when the user
 enters exit at the prompt, your program will set should run to 0 and terminate.
+
 This project is organized into several parts:
 1. Creating the child process and executing the command in the child
 2. Providing a history feature
