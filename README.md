@@ -157,13 +157,12 @@ command. For this project, the execvp() function should be invoked as execvp(arg
 check whether the user included & to determine whether or not the parent process is to wait for the child
 to exit.
 
-## III. Creating a History Feature
-The next task is to modify the shell interface program so that it provides a history feature to allow a user
-to execute the most recent command by entering !!. For example, if a user enters the command ls -l, she
-can then execute that command again by entering !! at the prompt. Any command executed in this fashion
-should be echoed on the user’s screen, and the command should also be placed in the history buffer as
-the next command. Your program should also manage basic error handling. If there is no recent command
-in the history, entering !! should result in a message “No commands in history.”
+
+
+
+
+
+
 
 
 ## IV. Redirecting Input and Output
