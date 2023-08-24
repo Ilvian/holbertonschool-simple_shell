@@ -168,7 +168,7 @@ to exit.
 ## IV. Redirecting Input and Output
 Your shell should then be modified to support the ‘>’ and ‘<’ redirection operators, where ‘>’ redirects
 the output of a command to a file and ‘<’ redirects the input to a command from a file. For example, if a
-user enters
+user enter
 ```
 ls > ./a.out
 ```
