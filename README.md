@@ -263,7 +263,7 @@ Pair programming and team work
 Building a test suite to check our own code
 
 ## Authors
-👤 **ARLIND Hasimi**
+👤 **ARLIND HASIMI**
 👤 **ILVIAN DIMCO**
 👤 **DONALD MERDANAJ**
 👤 **ERSIDA KARAJ**
